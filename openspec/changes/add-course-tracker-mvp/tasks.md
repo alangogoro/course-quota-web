@@ -1,6 +1,6 @@
 ## 1. 專案初始化
 
-- [ ] 1.1 依「Decision: Build stack is Vite + TypeScript + vanilla DOM」建立專案骨架：Vite + TypeScript scaffold、基礎 `index.html` 殼層、以及高齡友善樣式表，並滿足「無障礙最低標準」（內文 18 px、主按鈕標籤 24 px、點擊區至少 48 x 48 CSS 像素、對比達 WCAG AA）。
+- [x] 1.1 依「Decision: Build stack is Vite + TypeScript + vanilla DOM」建立專案骨架：Vite + TypeScript scaffold、基礎 `index.html` 殼層、以及高齡友善樣式表，並滿足「無障礙最低標準」（內文 18 px、主按鈕標籤 24 px、點擊區至少 48 x 48 CSS 像素、對比達 WCAG AA）。
 
 ## 2. 本地資料層
 

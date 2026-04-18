@@ -1,2 +1,13 @@
 .spectra/
 openspec/.vector-search.db*
+
+# Node / Vite build artifacts
+node_modules/
+dist/
+.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
