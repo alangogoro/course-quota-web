@@ -15,7 +15,7 @@ const app = document.querySelector<HTMLElement>("#app") as HTMLElement;
 const WEEKDAY_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
 // Captured once when navigating to confirm-add to keep date/time consistent.
-let pendingDate = { iso: "", weekday: 0, label: "" };
+let pendingDate = { iso: "", weekday: 0, label: "", datePart: "", weekPart: "" };
 
 const CLEAR_PHRASE = "刪除全部上課紀錄";
 
@@ -34,6 +34,8 @@ async function navigate(page: Page): Promise<void> {
       iso: `${y}-${mo}-${d}`,
       weekday: w,
       label: `今天是 ${m} 月 ${day} 日 星期${WEEKDAY_ZH[w]}`,
+      datePart: `今天是 ${m} 月 ${day} 日`,
+      weekPart: `星期${WEEKDAY_ZH[w]}`,
     };
   }
   app.innerHTML = "";
@@ -67,15 +69,27 @@ async function showHome(): Promise<void> {
     countAttended(),
   ]);
 
+  const pct =
+    settings.maxCourseCount > 0
+      ? Math.min(100, Math.round((usedCount / settings.maxCourseCount) * 100))
+      : 0;
+
   app.innerHTML = `
     <div class="page">
-      <div class="home-content">
-        <h1 class="home-greeting">嗨 ${escHtml(settings.name)}</h1>
-        <p class="home-progress">已上課 ${usedCount}/${settings.maxCourseCount}</p>
+      <div class="home-hero">
+        <h1 class="home-hero__greeting">嗨，${escHtml(settings.name)}</h1>
+        <p class="home-hero__label">已上課堂數</p>
+        <p class="home-hero__count" aria-label="已上課 ${usedCount} 堂，目標 ${settings.maxCourseCount} 堂">
+          ${usedCount}<span class="home-hero__count-sep">/</span><span class="home-hero__count-max">${settings.maxCourseCount}</span>
+        </p>
+        <div class="progress-track" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="進度 ${pct}%">
+          <div class="progress-fill" style="width: ${pct}%"></div>
+        </div>
+        <p class="home-hero__pct">${pct}%</p>
       </div>
       <div class="btn-stack">
         <button class="btn-primary btn-full" id="btn-add" type="button">新增上課紀錄</button>
-        <button class="btn-secondary btn-full" id="btn-history" type="button">查看上課紀錄</button>
+        <button class="btn-ghost btn-full" id="btn-history" type="button">查看上課紀錄</button>
       </div>
     </div>
   `;
@@ -93,12 +107,14 @@ async function showHome(): Promise<void> {
 function showConfirmAdd(): void {
   app.innerHTML = `
     <div class="page">
-      <div class="confirm-content">
-        <p class="confirm-date">${pendingDate.label}</p>
+      <div class="confirm-hero">
+        <p class="confirm-hero__date">${pendingDate.datePart}</p>
+        <p class="confirm-hero__weekday">${pendingDate.weekPart}</p>
+        <p class="confirm-hero__note">確認後將記錄今天的上課</p>
       </div>
       <div class="btn-stack">
         <button class="btn-primary btn-full" id="btn-confirm-add" type="button">確認新增</button>
-        <button class="btn-secondary btn-full" id="btn-cancel-add" type="button">取消</button>
+        <button class="btn-ghost btn-full" id="btn-cancel-add" type="button">取消</button>
       </div>
     </div>
   `;
@@ -128,15 +144,18 @@ async function showHistory(): Promise<void> {
 
   app.innerHTML = `
     <div class="page">
-      <div class="page-header">
-        <button class="icon-btn" id="btn-back" type="button" aria-label="返回首頁">
+      <div class="page-nav">
+        <button class="btn-back-nav" id="btn-back" type="button" aria-label="返回首頁">
           ${chevronLeftSVG()}
           返回
         </button>
         <h1 class="page-title">上課紀錄</h1>
-        <button class="icon-btn icon-btn--danger" id="btn-clear-entry" type="button">
+      </div>
+      <div class="history-meta">
+        <span class="history-count">共 ${records.length} 筆</span>
+        <button class="btn-danger-ghost" id="btn-clear-entry" type="button">
           ${trashSVG()}
-          清空上課紀錄
+          清空紀錄
         </button>
       </div>
       ${listHTML}
@@ -157,14 +176,17 @@ function recordItemHTML(r: CourseRecord): string {
   const d = parseInt(r.attendedDate.slice(8, 10), 10);
   const dateStr = `${m}月${d}日`;
   const weekStr = `星期${WEEKDAY_ZH[r.weekday]}`;
-  const attendedStr = r.attended ? "✓ 有出席" : "✗ 未出席";
+  const badgeClass = r.attended ? "badge--present" : "badge--absent";
+  const badgeText = r.attended ? "✓ 上課" : "✗ 缺席";
   const noteHTML = r.note
-    ? `<div class="record-note">${escHtml(r.note)}</div>`
+    ? `<p class="record-item__note">${escHtml(r.note)}</p>`
     : "";
   return `
     <li class="record-item">
-      <div class="record-date">${dateStr} ${weekStr}</div>
-      <div class="record-meta">${attendedStr}</div>
+      <div class="record-item__top">
+        <div class="record-item__date">${dateStr} ${weekStr}</div>
+        <div class="record-item__badge ${badgeClass}">${badgeText}</div>
+      </div>
       ${noteHTML}
     </li>
   `;
@@ -175,27 +197,32 @@ function recordItemHTML(r: CourseRecord): string {
 function showConfirmClear(): void {
   app.innerHTML = `
     <div class="page">
-      <div class="page-header">
-        <button class="icon-btn" id="btn-cancel-clear" type="button" aria-label="取消並返回">
+      <div class="page-nav">
+        <button class="btn-back-nav" id="btn-cancel-clear" type="button" aria-label="取消並返回">
           ${chevronLeftSVG()}
           取消
         </button>
-        <h1 class="page-title">清空上課紀錄</h1>
+        <h1 class="page-title">清空紀錄</h1>
       </div>
-      <p class="warning-text">此操作無法復原</p>
-      <p>輸入以下文字以解鎖清空按鈕：</p>
-      <p class="phrase-hint" aria-hidden="true">刪除全部上課紀錄</p>
-      <input
-        type="text"
-        id="input-phrase"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        placeholder="在此輸入確認文字"
-        aria-label="輸入「刪除全部上課紀錄」以確認"
-      />
-      <button class="btn-danger btn-full" id="btn-do-clear" type="button" disabled>清空資料庫</button>
+      <div class="warning-card" role="alert">
+        <p class="warning-card__title">此操作無法復原</p>
+        <p class="warning-card__body">清空後，所有上課紀錄將永久刪除，無法找回。</p>
+      </div>
+      <div>
+        <p class="confirm-phrase__label">輸入以下文字以解鎖清空：</p>
+        <p class="phrase-hint" aria-hidden="true">刪除全部上課紀錄</p>
+        <input
+          type="text"
+          id="input-phrase"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="在此輸入確認文字"
+          aria-label="輸入「刪除全部上課紀錄」以確認"
+        />
+      </div>
+      <button class="btn-danger btn-full" id="btn-do-clear" type="button" disabled>清空全部紀錄</button>
     </div>
   `;
 
