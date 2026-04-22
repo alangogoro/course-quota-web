@@ -1,5 +1,15 @@
 schema: spec-driven
 
+context: |
+  語言：繁體中文（zh-TW）
+  所有 proposal、design、spec、tasks 內容必須以繁體中文撰寫。
+  
+  技術術語、程式碼、檔名、路徑、欄位名稱與 Slash Commands 保持英文。
+  例如：username、proposal.md、design.md、tasks.md、/spectra:apply。
+  
+  全專案規則：
+  任何涉及 UI、UX、資訊架構、視覺層級、按鈕位置、互動流程、使用者可見文案、表單操作或高齡友善體驗的開發與調整，皆必須使用 `ui-ux-pro-max` skill 參與分析、設計 review 與實作規劃。
+  純資料層、IndexedDB、sequence 邏輯、部署、gitignore、測試與非 UI 結構調整，不強制使用 `ui-ux-pro-max` skill。
 # Project context (optional)
 # This is shown to AI when creating artifacts.
 # Add your tech stack, conventions, style guides, domain knowledge, etc.
@@ -18,10 +28,3 @@ schema: spec-driven
 #       - Always include a "Non-goals" section
 #     tasks:
 #       - Break tasks into chunks of max 2 hours
-
-context: |
-  語言：繁體中文（zh-TW）
-  所有 proposal、design、spec、tasks 內容必須以繁體中文撰寫。
-
-  技術術語、程式碼、檔名、路徑、欄位名稱與 Slash Commands 保持英文。
-  例如：username、proposal.md、design.md、tasks.md、/spectra:apply。
