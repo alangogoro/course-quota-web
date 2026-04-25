@@ -6,8 +6,9 @@ import {
   clearRecords,
   type CourseRecord,
 } from "./db/db";
+import { showSettings } from "./features/settings/index";
 
-type Page = "home" | "confirm-add" | "history" | "confirm-clear";
+type Page = "home" | "confirm-add" | "history" | "confirm-clear" | "settings";
 
 // Non-null assertion is safe: index.html always includes <main id="app">.
 const app = document.querySelector<HTMLElement>("#app") as HTMLElement;
@@ -53,6 +54,9 @@ async function navigate(page: Page): Promise<void> {
       case "confirm-clear":
         showConfirmClear();
         break;
+      case "settings":
+        await showSettings(app, navigate);
+        break;
     }
   } catch (err) {
     console.error("Navigation error:", err);
@@ -76,6 +80,12 @@ async function showHome(): Promise<void> {
 
   app.innerHTML = `
     <div class="page">
+      <div class="home-header">
+        <button class="btn-settings" id="btn-settings" type="button" aria-label="設定">
+          ${gearSVG()}
+          設定
+        </button>
+      </div>
       <div class="home-hero">
         <h1 class="home-hero__greeting">嗨，${escHtml(settings.name)}</h1>
         <p class="home-hero__label">已上課堂數</p>
@@ -94,6 +104,9 @@ async function showHome(): Promise<void> {
     </div>
   `;
 
+  app.querySelector("#btn-settings")!.addEventListener("click", () =>
+    navigate("settings")
+  );
   app.querySelector("#btn-add")!.addEventListener("click", () =>
     navigate("confirm-add")
   );
@@ -259,6 +272,13 @@ function escHtml(s: string): string {
 function chevronLeftSVG(): string {
   return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M12 15l-5-5 5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function gearSVG(): string {
+  return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
 }
 

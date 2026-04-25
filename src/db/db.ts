@@ -75,6 +75,16 @@ export async function getSettings(): Promise<Settings> {
   });
 }
 
+export async function saveSettings(name: string, maxCourseCount: number): Promise<void> {
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("settings", "readwrite");
+    tx.objectStore("settings").put({ key: "singleton", name, maxCourseCount } as Settings);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
 export async function countAttended(): Promise<number> {
   const db = await getDB();
   return new Promise((resolve, reject) => {
