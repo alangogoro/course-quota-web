@@ -9,5 +9,16 @@ dist/
 # Logs
 *.log
 
+# IDE
+.vscode/
+
+# Manual acceptance test screenshots
+screenshots/
+
+# Browser profiles / automation user data
+user-data-dir/
+.playwright/
+playwright-user-data/
+
 # OS
 .DS_Store
