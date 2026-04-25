@@ -288,6 +288,35 @@ input[type="text"]:focus-visible {
 
 /* ─── Home ────────────────────────────────────────────────────────────────── */
 
+.home-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-settings {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  min-height: var(--tap-min);
+  min-width: var(--tap-min);
+  padding: 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 160ms ease, color 160ms ease;
+}
+.btn-settings:active {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
 .home-hero {
   background: var(--color-surface);
   border-radius: var(--radius-xl);
@@ -514,6 +543,33 @@ input[type="text"]:focus-visible {
   letter-spacing: 0.04em;
   user-select: all;
   margin: var(--sp-1) 0;
+}
+
+/* ─── Settings ────────────────────────────────────────────────────────────── */
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.settings-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.field-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  min-height: 1.4em;
 }
 
 /* ─── Utilities ───────────────────────────────────────────────────────────── */
