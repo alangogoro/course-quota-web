@@ -5,6 +5,7 @@ openspec/.vector-search.db*
 node_modules/
 dist/
 .vite/
+.tmp/
 
 # Logs
 *.log
@@ -18,6 +19,7 @@ screenshots/
 # Browser profiles / automation user data
 user-data-dir/
 .playwright/
+.playwright-cli/
 playwright-user-data/
 
 # OS
