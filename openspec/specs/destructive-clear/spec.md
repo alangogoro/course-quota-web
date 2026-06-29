@@ -21,33 +21,6 @@
 - **WHEN** 使用者所輸入的值與 `刪除全部上課紀錄` 有任何差異（包含多餘空白、錯字、字序不同、簡體變體、或半形變體）
 - **THEN** `清空資料庫` 按鈕 MUST 維持停用狀態
 
-
-<!-- @trace
-source: add-course-tracker-mvp
-updated: 2026-04-19
-code:
-  - .playwright-cli/page-2026-04-18T19-03-55-250Z.yml
-  - src/styles/base.css
-  - .playwright-cli/page-2026-04-18T19-04-15-884Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-33-221Z.yml
-  - package.json
-  - .playwright-cli/page-2026-04-18T19-03-34-188Z.yml
-  - home.png
-  - .playwright-cli/page-2026-04-18T19-03-44-750Z.yml
-  - history.png
-  - vite.config.ts
-  - confirm-add.png
-  - index.html
-  - .playwright-cli/page-2026-04-18T19-04-01-625Z.yml
-  - .playwright-cli/page-2026-04-18T19-05-03-572Z.yml
-  - tsconfig.json
-  - .playwright-cli/page-2026-04-18T19-04-27-848Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-22-482Z.yml
-  - src/db/db.ts
-  - src/main.ts
-  - .playwright-cli/page-2026-04-18T19-03-23-633Z.yml
--->
-
 ### Requirement: 清空時必須保留設定與序號計數器
 
 系統 SHALL 在清空動作成功確認後，刪除 `records` store 中的所有紀錄。系統 MUST NOT 刪除、重設或修改 `settings` store 中的任何值——`name`、`maxCourseCount` 與序號計數器（`{ key: "sequence", value }`）MUST 維持清空前的值，使得後續新增的 `courseNumber` 嚴格大於任何曾經出現過的 `courseNumber`，永不重用。
@@ -68,33 +41,6 @@ code:
 - **AND** 使用者在清空後新增一筆課程紀錄
 - **THEN** 新紀錄的 `courseNumber` MUST 嚴格大於 `K`
 
-
-<!-- @trace
-source: add-course-tracker-mvp
-updated: 2026-04-19
-code:
-  - .playwright-cli/page-2026-04-18T19-03-55-250Z.yml
-  - src/styles/base.css
-  - .playwright-cli/page-2026-04-18T19-04-15-884Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-33-221Z.yml
-  - package.json
-  - .playwright-cli/page-2026-04-18T19-03-34-188Z.yml
-  - home.png
-  - .playwright-cli/page-2026-04-18T19-03-44-750Z.yml
-  - history.png
-  - vite.config.ts
-  - confirm-add.png
-  - index.html
-  - .playwright-cli/page-2026-04-18T19-04-01-625Z.yml
-  - .playwright-cli/page-2026-04-18T19-05-03-572Z.yml
-  - tsconfig.json
-  - .playwright-cli/page-2026-04-18T19-04-27-848Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-22-482Z.yml
-  - src/db/db.ts
-  - src/main.ts
-  - .playwright-cli/page-2026-04-18T19-03-23-633Z.yml
--->
-
 ### Requirement: 不可復原警示文字
 
 系統 SHALL 在清空確認畫面上，於使用者可輸入確認片語之前，以大字體的高齡友善級距清楚顯示「此操作無法復原」的警示文字。
@@ -106,33 +52,6 @@ code:
 - **AND** 警示文字 MUST 使用與主要操作標籤相同等級的大字體
 
 ## Requirements
-
-
-<!-- @trace
-source: add-course-tracker-mvp
-updated: 2026-04-19
-code:
-  - .playwright-cli/page-2026-04-18T19-03-55-250Z.yml
-  - src/styles/base.css
-  - .playwright-cli/page-2026-04-18T19-04-15-884Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-33-221Z.yml
-  - package.json
-  - .playwright-cli/page-2026-04-18T19-03-34-188Z.yml
-  - home.png
-  - .playwright-cli/page-2026-04-18T19-03-44-750Z.yml
-  - history.png
-  - vite.config.ts
-  - confirm-add.png
-  - index.html
-  - .playwright-cli/page-2026-04-18T19-04-01-625Z.yml
-  - .playwright-cli/page-2026-04-18T19-05-03-572Z.yml
-  - tsconfig.json
-  - .playwright-cli/page-2026-04-18T19-04-27-848Z.yml
-  - .playwright-cli/page-2026-04-18T19-04-22-482Z.yml
-  - src/db/db.ts
-  - src/main.ts
-  - .playwright-cli/page-2026-04-18T19-03-23-633Z.yml
--->
 
 ### Requirement: 片語閘門的清空動作
 
