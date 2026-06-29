@@ -1,5 +1,14 @@
+import {
+  migrateLegacyRecords,
+  normalizeCourseRecord,
+  parseNewCourseRecordInput,
+  sumAttendedCounts,
+  type CourseRecord,
+  type CourseRecordLike,
+} from "./courseRecordRules";
+
 const DB_NAME = "course-tracker";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export interface Settings {
   key: "singleton";
@@ -12,13 +21,7 @@ interface SequenceEntry {
   value: number;
 }
 
-export interface CourseRecord {
-  courseNumber: number;
-  attended: boolean;
-  attendedDate: string; // YYYY-MM-DD
-  weekday: number;      // 0=Sun … 6=Sat
-  note: string;
-}
+export type { CourseRecord } from "./courseRecordRules";
 
 let _db: IDBDatabase | null = null;
 
@@ -40,10 +43,29 @@ function openDB(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains("records")) {
         db.createObjectStore("records", { keyPath: "courseNumber" });
       }
+      migrateLegacyRecordsIfNeeded(req.transaction);
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
+}
+
+function migrateLegacyRecordsIfNeeded(tx: IDBTransaction | null): void {
+  if (!tx) return;
+
+  const store = tx.objectStore("records");
+  const readReq = store.getAll();
+  readReq.onsuccess = () => {
+    const migration = migrateLegacyRecords(readReq.result as CourseRecordLike[]);
+
+    for (const courseNumber of migration.recordsToDelete) {
+      store.delete(courseNumber);
+    }
+
+    for (const record of migration.recordsToPut) {
+      store.put(record);
+    }
+  };
 }
 
 // Seeds settings on first open; no-op if singleton already exists.
@@ -91,14 +113,29 @@ export async function countAttended(): Promise<number> {
     const tx = db.transaction("records", "readonly");
     const req = tx.objectStore("records").getAll();
     req.onsuccess = () => {
-      resolve((req.result as CourseRecord[]).filter((r) => r.attended).length);
+      resolve(sumAttendedCounts(req.result as CourseRecordLike[]));
     };
     req.onerror = () => reject(req.error);
   });
 }
 
 // Atomic: reads sequence, writes record with sequence+1, updates sequence. All in one transaction.
-export async function addCourse(attendedDate: string, weekday: number): Promise<void> {
+export async function addCourse(
+  attendedDate: string,
+  weekday: number,
+  count: unknown = 1,
+  note: unknown = ""
+): Promise<void> {
+  const parsed = parseNewCourseRecordInput({
+    attendedDate,
+    weekday,
+    count,
+    note,
+  });
+  if (!parsed.ok) {
+    throw new Error(Object.values(parsed.errors).filter(Boolean).join("；"));
+  }
+
   const db = await getDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(["settings", "records"], "readwrite");
@@ -110,10 +147,7 @@ export async function addCourse(attendedDate: string, weekday: number): Promise<
       const courseNumber = seq.value + 1;
       recordsStore.put({
         courseNumber,
-        attended: true,
-        attendedDate,
-        weekday,
-        note: "",
+        ...parsed.record,
       } as CourseRecord);
       settingsStore.put({ key: "sequence", value: courseNumber } as SequenceEntry);
     };
@@ -129,9 +163,9 @@ export async function getAllRecords(): Promise<CourseRecord[]> {
     const tx = db.transaction("records", "readonly");
     const req = tx.objectStore("records").getAll();
     req.onsuccess = () => {
-      const records = (req.result as CourseRecord[]).sort(
-        (a, b) => b.courseNumber - a.courseNumber
-      );
+    const records = (req.result as CourseRecord[]).sort(
+      (a, b) => b.courseNumber - a.courseNumber
+    ).map(normalizeCourseRecord);
       resolve(records);
     };
     req.onerror = () => reject(req.error);
@@ -144,6 +178,20 @@ export async function clearRecords(): Promise<void> {
   return new Promise((resolve, reject) => {
     const tx = db.transaction("records", "readwrite");
     tx.objectStore("records").clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+export async function deleteCourseRecord(courseNumber: number): Promise<void> {
+  if (!Number.isInteger(courseNumber) || courseNumber < 1) {
+    throw new Error("courseNumber must be a positive integer");
+  }
+
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("records", "readwrite");
+    tx.objectStore("records").delete(courseNumber);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });

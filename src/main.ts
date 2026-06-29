@@ -4,49 +4,33 @@ import {
   addCourse,
   getAllRecords,
   clearRecords,
+  deleteCourseRecord,
   type CourseRecord,
 } from "./db/db";
+import {
+  MAX_COURSE_COUNT_PER_RECORD,
+  MAX_NOTE_LENGTH,
+  parseNewCourseRecordInput,
+} from "./db/courseRecordRules";
 import { showSettings } from "./features/settings/index";
 
-type Page = "home" | "confirm-add" | "history" | "confirm-clear" | "settings";
+type Page = "home" | "history" | "confirm-clear" | "settings";
 
 // Non-null assertion is safe: index.html always includes <main id="app">.
 const app = document.querySelector<HTMLElement>("#app") as HTMLElement;
 
 const WEEKDAY_ZH = ["日", "一", "二", "三", "四", "五", "六"] as const;
 
-// Captured once when navigating to confirm-add to keep date/time consistent.
-let pendingDate = { iso: "", weekday: 0, label: "", datePart: "", weekPart: "" };
-
 const CLEAR_PHRASE = "刪除全部上課紀錄";
 
 // ─── Router ──────────────────────────────────────────────────────────────────
 
 async function navigate(page: Page): Promise<void> {
-  if (page === "confirm-add") {
-    const now = new Date();
-    const y = now.getFullYear();
-    const mo = String(now.getMonth() + 1).padStart(2, "0");
-    const d = String(now.getDate()).padStart(2, "0");
-    const m = now.getMonth() + 1;
-    const day = now.getDate();
-    const w = now.getDay();
-    pendingDate = {
-      iso: `${y}-${mo}-${d}`,
-      weekday: w,
-      label: `今天是 ${m} 月 ${day} 日 星期${WEEKDAY_ZH[w]}`,
-      datePart: `今天是 ${m} 月 ${day} 日`,
-      weekPart: `星期${WEEKDAY_ZH[w]}`,
-    };
-  }
   app.innerHTML = "";
   try {
     switch (page) {
       case "home":
         await showHome();
-        break;
-      case "confirm-add":
-        showConfirmAdd();
         break;
       case "history":
         await showHistory();
@@ -81,6 +65,11 @@ async function showHome(): Promise<void> {
   app.innerHTML = `
     <div class="page">
       <div class="home-header">
+        <img
+          class="home-header__icon"
+          src="icons/table-tennis-home.png"
+          alt="桌球拍與球圖示"
+        />
         <button class="btn-settings" id="btn-settings" type="button" aria-label="設定">
           ${gearSVG()}
           設定
@@ -108,41 +97,162 @@ async function showHome(): Promise<void> {
     navigate("settings")
   );
   app.querySelector("#btn-add")!.addEventListener("click", () =>
-    navigate("confirm-add")
+    openAddRecordModal()
   );
   app.querySelector("#btn-history")!.addEventListener("click", () =>
     navigate("history")
   );
 }
 
-// ─── Confirm Add ──────────────────────────────────────────────────────────────
+// ─── Add Record Modal ────────────────────────────────────────────────────────
 
-function showConfirmAdd(): void {
-  app.innerHTML = `
-    <div class="page">
-      <div class="confirm-hero">
-        <p class="confirm-hero__date">${pendingDate.datePart}</p>
-        <p class="confirm-hero__weekday">${pendingDate.weekPart}</p>
-        <p class="confirm-hero__note">確認後將記錄今天的上課</p>
+function openAddRecordModal(): void {
+  const initialDate = selectedDateFromLocalToday();
+  const modal = document.createElement("div");
+  modal.className = "modal-scrim";
+  modal.innerHTML = `
+    <section class="modal-card add-record-modal" role="dialog" aria-modal="true" aria-labelledby="add-modal-title">
+      <h2 class="modal-title" id="add-modal-title">今天是 ${initialDate.month} 月 ${initialDate.day} 日 星期${WEEKDAY_ZH[initialDate.weekday]}</h2>
+
+      <div class="modal-field">
+        <p class="modal-label" id="label-date">上課日期</p>
+        <div class="date-controls" aria-labelledby="label-date">
+          <label class="date-control">
+            <span>月份</span>
+            <select id="input-month" aria-label="月份">
+              ${monthOptionsHTML(initialDate.month)}
+            </select>
+          </label>
+          <label class="date-control">
+            <span>日期</span>
+            <input id="input-day" type="number" inputmode="numeric" min="1" max="${daysInMonth(initialDate.year, initialDate.month)}" value="${initialDate.day}" aria-label="日期" />
+          </label>
+        </div>
       </div>
-      <div class="btn-stack">
-        <button class="btn-primary btn-full" id="btn-confirm-add" type="button">確認新增</button>
-        <button class="btn-ghost btn-full" id="btn-cancel-add" type="button">取消</button>
+
+      <div class="modal-field">
+        <label class="modal-label" for="input-count">上課人數</label>
+        <div class="count-stepper">
+          <button class="btn-stepper" id="btn-count-dec" type="button" aria-label="減少上課人數">-</button>
+          <input id="input-count" type="number" inputmode="numeric" min="1" max="${MAX_COURSE_COUNT_PER_RECORD}" value="1" aria-describedby="error-count" />
+          <button class="btn-stepper" id="btn-count-inc" type="button" aria-label="增加上課人數">+</button>
+        </div>
+        <p class="field-error" id="error-count" role="alert" aria-live="polite"></p>
       </div>
-    </div>
+
+      <div class="modal-field">
+        <label class="modal-label" for="input-note">備註</label>
+        <textarea id="input-note" rows="3" aria-describedby="error-note note-hint" placeholder="可留空"></textarea>
+        <p class="field-hint" id="note-hint">最多 ${MAX_NOTE_LENGTH} 個字</p>
+        <p class="field-error" id="error-note" role="alert" aria-live="polite"></p>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost btn-modal" id="btn-cancel-add" type="button">取消</button>
+        <button class="btn-primary btn-modal" id="btn-confirm-add" type="button">確認新增</button>
+      </div>
+    </section>
   `;
 
-  app.querySelector("#btn-cancel-add")!.addEventListener("click", () =>
-    navigate("home")
-  );
+  app.appendChild(modal);
 
-  const confirmBtn =
-    app.querySelector<HTMLButtonElement>("#btn-confirm-add")!;
-  confirmBtn.addEventListener("click", async () => {
-    confirmBtn.disabled = true;
-    await addCourse(pendingDate.iso, pendingDate.weekday);
-    navigate("home");
+  const title = modal.querySelector<HTMLHeadingElement>("#add-modal-title")!;
+  const monthInput = modal.querySelector<HTMLSelectElement>("#input-month")!;
+  const dayInput = modal.querySelector<HTMLInputElement>("#input-day")!;
+  const countInput = modal.querySelector<HTMLInputElement>("#input-count")!;
+  const noteInput = modal.querySelector<HTMLTextAreaElement>("#input-note")!;
+  const countError = modal.querySelector<HTMLParagraphElement>("#error-count")!;
+  const noteError = modal.querySelector<HTMLParagraphElement>("#error-note")!;
+  const confirmBtn = modal.querySelector<HTMLButtonElement>("#btn-confirm-add")!;
+  const cancelBtn = modal.querySelector<HTMLButtonElement>("#btn-cancel-add")!;
+
+  let selectedDate = initialDate;
+
+  const closeModal = () => {
+    document.removeEventListener("keydown", onKeyDown);
+    modal.remove();
+    app.querySelector<HTMLButtonElement>("#btn-add")?.focus();
+  };
+
+  const syncSelectedDate = () => {
+    const month = clampNumber(Number(monthInput.value), 1, 12);
+    const maxDay = daysInMonth(selectedDate.year, month);
+    const day = clampNumber(Number(dayInput.value), 1, maxDay);
+    selectedDate = selectedDateFromParts(selectedDate.year, month, day);
+    dayInput.max = String(maxDay);
+    dayInput.value = String(selectedDate.day);
+    title.textContent = `今天是 ${selectedDate.month} 月 ${selectedDate.day} 日 星期${WEEKDAY_ZH[selectedDate.weekday]}`;
+  };
+
+  const validate = () => {
+    const parsed = parseNewCourseRecordInput({
+      attendedDate: selectedDate.iso,
+      weekday: selectedDate.weekday,
+      count: countInput.value,
+      note: noteInput.value,
+    });
+
+    countError.textContent = parsed.ok ? "" : parsed.errors.count ?? "";
+    noteError.textContent = parsed.ok ? "" : parsed.errors.note ?? "";
+    countInput.setAttribute("aria-invalid", String(!parsed.ok && Boolean(parsed.errors.count)));
+    noteInput.setAttribute("aria-invalid", String(!parsed.ok && Boolean(parsed.errors.note)));
+    confirmBtn.disabled = !parsed.ok;
+    return parsed;
+  };
+
+  const stepCount = (delta: number) => {
+    const current = Number(countInput.value);
+    const next = clampNumber(
+      Number.isFinite(current) ? current + delta : 1,
+      1,
+      MAX_COURSE_COUNT_PER_RECORD
+    );
+    countInput.value = String(next);
+    validate();
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") closeModal();
+  };
+
+  monthInput.addEventListener("change", () => {
+    syncSelectedDate();
+    validate();
   });
+  dayInput.addEventListener("change", () => {
+    syncSelectedDate();
+    validate();
+  });
+  dayInput.addEventListener("input", () => {
+    syncSelectedDate();
+    validate();
+  });
+  countInput.addEventListener("input", validate);
+  noteInput.addEventListener("input", validate);
+  modal.querySelector("#btn-count-dec")!.addEventListener("click", () => stepCount(-1));
+  modal.querySelector("#btn-count-inc")!.addEventListener("click", () => stepCount(1));
+  cancelBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", onKeyDown);
+
+  confirmBtn.addEventListener("click", async () => {
+    syncSelectedDate();
+    const parsed = validate();
+    if (!parsed.ok) return;
+    confirmBtn.disabled = true;
+    await addCourse(
+      selectedDate.iso,
+      selectedDate.weekday,
+      parsed.record.count,
+      parsed.record.note
+    );
+    await navigate("home");
+  });
+
+  validate();
+  monthInput.focus();
 }
 
 // ─── History ──────────────────────────────────────────────────────────────────
@@ -181,28 +291,135 @@ async function showHistory(): Promise<void> {
   app.querySelector("#btn-clear-entry")!.addEventListener("click", () =>
     navigate("confirm-clear")
   );
+  setupRecordSwipeHandlers(records);
 }
 
 function recordItemHTML(r: CourseRecord): string {
-  // Use slice to avoid noUncheckedIndexedAccess on split() result.
-  const m = parseInt(r.attendedDate.slice(5, 7), 10);
-  const d = parseInt(r.attendedDate.slice(8, 10), 10);
-  const dateStr = `${m}月${d}日`;
-  const weekStr = `星期${WEEKDAY_ZH[r.weekday]}`;
-  const badgeClass = r.attended ? "badge--present" : "badge--absent";
-  const badgeText = r.attended ? "✓ 上課" : "✗ 缺席";
-  const noteHTML = r.note
-    ? `<p class="record-item__note">${escHtml(r.note)}</p>`
+  const { dateStr, weekStr } = formatRecordDateParts(r);
+  const note = r.note.trim();
+  const noteHTML = note
+    ? `<p class="record-item__note">${escHtml(note)}</p>`
     : "";
   return `
-    <li class="record-item">
-      <div class="record-item__top">
-        <div class="record-item__date">${dateStr} ${weekStr}</div>
-        <div class="record-item__badge ${badgeClass}">${badgeText}</div>
+    <li class="record-swipe" data-course-number="${r.courseNumber}">
+      <button class="record-delete-action" type="button" aria-label="刪除 ${dateStr} ${weekStr} ${r.count}人">刪除</button>
+      <div class="record-item">
+        <div class="record-item__top">
+          <div class="record-item__date">${dateStr} ${weekStr}</div>
+          <div class="record-item__badge badge--count">${r.count}人</div>
+        </div>
+        ${noteHTML}
       </div>
-      ${noteHTML}
     </li>
   `;
+}
+
+function setupRecordSwipeHandlers(records: CourseRecord[]): void {
+  const rows = Array.from(app.querySelectorAll<HTMLLIElement>(".record-swipe"));
+  const recordsByNumber = new Map(
+    records.map((record) => [record.courseNumber, record])
+  );
+  let openRow: HTMLLIElement | null = null;
+
+  const closeRow = (row: HTMLLIElement) => {
+    row.classList.remove("is-open");
+    if (openRow === row) openRow = null;
+  };
+
+  const openSelectedRow = (row: HTMLLIElement) => {
+    if (openRow && openRow !== row) closeRow(openRow);
+    row.classList.add("is-open");
+    openRow = row;
+  };
+
+  for (const row of rows) {
+    const card = row.querySelector<HTMLElement>(".record-item");
+    if (!card) continue;
+
+    let startX = 0;
+    let startY = 0;
+    let pointerId: number | null = null;
+
+    card.addEventListener("pointerdown", (event) => {
+      startX = event.clientX;
+      startY = event.clientY;
+      pointerId = event.pointerId;
+      card.setPointerCapture(event.pointerId);
+    });
+
+    card.addEventListener("pointerup", (event) => {
+      if (pointerId !== event.pointerId) return;
+      const deltaX = event.clientX - startX;
+      const deltaY = event.clientY - startY;
+      pointerId = null;
+
+      if (Math.abs(deltaX) <= Math.abs(deltaY)) return;
+      if (deltaX < -48) {
+        openSelectedRow(row);
+      } else if (deltaX > 24) {
+        closeRow(row);
+      }
+    });
+
+    card.addEventListener("pointercancel", () => {
+      pointerId = null;
+    });
+
+    row
+      .querySelector<HTMLButtonElement>(".record-delete-action")
+      ?.addEventListener("click", () => {
+        const courseNumber = Number(row.dataset.courseNumber);
+        const record = recordsByNumber.get(courseNumber);
+        if (record) openDeleteRecordModal(record);
+      });
+  }
+}
+
+function openDeleteRecordModal(record: CourseRecord): void {
+  const { dateStr, weekStr } = formatRecordDateParts(record);
+  const note = record.note.trim();
+  const modal = document.createElement("div");
+  modal.className = "modal-scrim";
+  modal.innerHTML = `
+    <section class="modal-card delete-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+      <h2 class="modal-title" id="delete-modal-title">確定刪除這筆上課紀錄？</h2>
+      <div class="delete-record-summary">
+        <p>${dateStr} ${weekStr}・${record.count}人</p>
+        ${note ? `<p class="delete-record-note">${escHtml(note)}</p>` : ""}
+      </div>
+      <div class="modal-actions">
+        <button class="btn-ghost btn-modal" id="btn-cancel-delete" type="button">取消</button>
+        <button class="btn-danger btn-modal" id="btn-confirm-delete" type="button">刪除</button>
+      </div>
+    </section>
+  `;
+
+  app.appendChild(modal);
+
+  const closeModal = () => {
+    document.removeEventListener("keydown", onKeyDown);
+    modal.remove();
+  };
+
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") closeModal();
+  };
+
+  modal.querySelector("#btn-cancel-delete")!.addEventListener("click", closeModal);
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", onKeyDown);
+
+  const confirmBtn =
+    modal.querySelector<HTMLButtonElement>("#btn-confirm-delete")!;
+  confirmBtn.addEventListener("click", async () => {
+    confirmBtn.disabled = true;
+    await deleteCourseRecord(record.courseNumber);
+    await navigate("history");
+  });
+
+  modal.querySelector<HTMLButtonElement>("#btn-cancel-delete")?.focus();
 }
 
 // ─── Confirm Clear ────────────────────────────────────────────────────────────
@@ -260,6 +477,72 @@ function showConfirmClear(): void {
 }
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
+
+interface SelectedDate {
+  year: number;
+  month: number;
+  day: number;
+  weekday: number;
+  iso: string;
+}
+
+function selectedDateFromLocalToday(): SelectedDate {
+  const today = new Date();
+  return selectedDateFromParts(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate()
+  );
+}
+
+function selectedDateFromParts(
+  year: number,
+  monthValue: number,
+  dayValue: number
+): SelectedDate {
+  const month = clampNumber(monthValue, 1, 12);
+  const day = clampNumber(dayValue, 1, daysInMonth(year, month));
+  const date = new Date(year, month - 1, day);
+  const paddedMonth = String(month).padStart(2, "0");
+  const paddedDay = String(day).padStart(2, "0");
+
+  return {
+    year,
+    month,
+    day,
+    weekday: date.getDay(),
+    iso: `${year}-${paddedMonth}-${paddedDay}`,
+  };
+}
+
+function daysInMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
+
+function clampNumber(value: number, min: number, max: number): number {
+  if (!Number.isFinite(value)) return min;
+  return Math.min(max, Math.max(min, Math.trunc(value)));
+}
+
+function monthOptionsHTML(selectedMonth: number): string {
+  return Array.from({ length: 12 }, (_, index) => {
+    const month = index + 1;
+    const selected = month === selectedMonth ? " selected" : "";
+    return `<option value="${month}"${selected}>${month} 月</option>`;
+  }).join("");
+}
+
+function formatRecordDateParts(record: CourseRecord): {
+  dateStr: string;
+  weekStr: string;
+} {
+  const month = parseInt(record.attendedDate.slice(5, 7), 10);
+  const day = parseInt(record.attendedDate.slice(8, 10), 10);
+  return {
+    dateStr: `${month}月${day}日`,
+    weekStr: `星期${WEEKDAY_ZH[record.weekday]}`,
+  };
+}
 
 function escHtml(s: string): string {
   return s
