@@ -1,0 +1,517 @@
+{
+  "/Users/user/Downloads/course-quota-web/package.json": {
+    "mtime": 1782700545.2427938,
+    "ast_hash": "684b1446863fff44d26f72a046d47bc0",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/tsconfig.json": {
+    "mtime": 1776527165.73308,
+    "ast_hash": "dd26b429354ac339eb0b8b0c9db8461f",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/vite.config.ts": {
+    "mtime": 1776542994.0671155,
+    "ast_hash": "c52970a1ad86b0b3a701513ef442848d",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/tests/courseRecordRules.test.mjs": {
+    "mtime": 1782700564.826084,
+    "ast_hash": "03610693679ccab02669c7d2508d2827",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/settings.json": {
+    "mtime": 1782696028.840518,
+    "ast_hash": "f72203731079b59eed7520d218dc2152",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.tmp/test-dist/courseRecordRules.js": {
+    "mtime": 1782701887.7630756,
+    "ast_hash": "ce73aa776af387a10e8998358b3276a7",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/src/main.ts": {
+    "mtime": 1782701824.64263,
+    "ast_hash": "f014510a2c3f1650f3e8052bf5b4bc37",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/src/features/settings/index.ts": {
+    "mtime": 1777141968.385813,
+    "ast_hash": "ae467f145462e8c490cf228de9fc30a6",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/src/db/db.ts": {
+    "mtime": 1782700955.1772807,
+    "ast_hash": "59cca899f324339d8d2f70b28ed56180",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/src/db/courseRecordRules.ts": {
+    "mtime": 1782700615.5719743,
+    "ast_hash": "e41961fe2e1d67dd55c5e93ec6343939",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/index.html": {
+    "mtime": 1777141950.8399024,
+    "ast_hash": "eeda5d0fd460750c16a8addfe047bcef",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/course-quota-web_Study_Guide.html": {
+    "mtime": 1782666365.2062795,
+    "ast_hash": "25e2a46d6eb61779d9da5d07dca2e05b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.spectra.yaml": {
+    "mtime": 1782696028.8290458,
+    "ast_hash": "136b468c84345b732a3f2ad18b7d5f58",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/AGENTS.md": {
+    "mtime": 1782052377.165297,
+    "ast_hash": "a9c5d12e26a5bcb4b519451bf8ab19b9",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/CLAUDE.md": {
+    "mtime": 1782696028.834421,
+    "ast_hash": "20f3c786b3c8394e71979b7f9f828e87",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/course-quota-web_Study_Guide.md": {
+    "mtime": 1782666356.909182,
+    "ast_hash": "2992dad07d2863fd4c74808b22023f82",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-debug/SKILL.md": {
+    "mtime": 1782052377.1679535,
+    "ast_hash": "60dec72f6ad553a4739d5989cb22c4ac",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-analyze/SKILL.md": {
+    "mtime": 1782665768.654998,
+    "ast_hash": "0a8449958e234ef254432fab8dc97b0b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-discuss/SKILL.md": {
+    "mtime": 1782052377.1655254,
+    "ast_hash": "55563da3bff9f3c3f977a790671ae6f6",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-drift/SKILL.md": {
+    "mtime": 1782052377.168986,
+    "ast_hash": "e29dfa3f57b0d4ccebb2292f0da197fe",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-audit/SKILL.md": {
+    "mtime": 1782052377.1682568,
+    "ast_hash": "e93f49a34ea37ffb72881dec09a0a02d",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-archive/SKILL.md": {
+    "mtime": 1782052377.1662207,
+    "ast_hash": "efdfd2b600dca07834cbe2d39b16873f",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-propose/SKILL.md": {
+    "mtime": 1782052377.16716,
+    "ast_hash": "e8bc6ebbfac62dcf80c7578acfce4af1",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-ask/SKILL.md": {
+    "mtime": 1782052377.1667926,
+    "ast_hash": "81dcb791f88a12ab6945438eaf205dd1",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-ingest/SKILL.md": {
+    "mtime": 1782052377.1675103,
+    "ast_hash": "ff8b2071d2026477f2798cfe250c4fab",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-verify/SKILL.md": {
+    "mtime": 1782665768.6556857,
+    "ast_hash": "6fd06c159cab3ab11e443989ba740f74",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-apply/SKILL.md": {
+    "mtime": 1782052377.165836,
+    "ast_hash": "1fdc1ae42f6cad3c8857408dffbc9996",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.agents/skills/spectra-commit/SKILL.md": {
+    "mtime": 1782052377.168603,
+    "ast_hash": "bfbc3d697a202b76f967aa084a3c9086",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/debug.md": {
+    "mtime": 1782696028.8380241,
+    "ast_hash": "11ef9b7990b293b41aec068c1086264d",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/archive.md": {
+    "mtime": 1782696028.8362455,
+    "ast_hash": "61219529e49b5dbc492c090ebb86f544",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/apply.md": {
+    "mtime": 1782696028.8357277,
+    "ast_hash": "206667ca7374e3666b78cb3b7b896d82",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/discuss.md": {
+    "mtime": 1782696028.8353229,
+    "ast_hash": "95b19f9f7cd56009f3a7d142fd767cb0",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/audit.md": {
+    "mtime": 1782696028.8386235,
+    "ast_hash": "8da6aac9369aed3b58327150a9397f15",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/ingest.md": {
+    "mtime": 1782696028.8375647,
+    "ast_hash": "314e6392b074691f4fc65a5bd932eb79",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/commit.md": {
+    "mtime": 1782696028.8392491,
+    "ast_hash": "579eb105fe317e8ac7f2744239f9cd95",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/drift.md": {
+    "mtime": 1782696028.8397703,
+    "ast_hash": "252d4dff985bae6e78c4b18e06de0799",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/propose.md": {
+    "mtime": 1782696028.8370981,
+    "ast_hash": "94c28b35e24d178294ef1618f97938fa",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/commands/spectra/ask.md": {
+    "mtime": 1782696028.8367121,
+    "ast_hash": "83adaca3ffd33d774d75c2b3f52a24b2",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-debug/SKILL.md": {
+    "mtime": 1782696028.84565,
+    "ast_hash": "9eb851792a18e95522107057cd7bed40",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-analyze/SKILL.md": {
+    "mtime": 1782696028.8434029,
+    "ast_hash": "44f22542cac54a6ebfc7040753423a37",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-discuss/SKILL.md": {
+    "mtime": 1782696028.841219,
+    "ast_hash": "613d5ece3eeb3777b562caaa35491192",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-drift/SKILL.md": {
+    "mtime": 1782696028.8472068,
+    "ast_hash": "502abfe945a18c85f128b85fd03512a8",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-audit/SKILL.md": {
+    "mtime": 1782696028.8461754,
+    "ast_hash": "53cf6ea558c8174190ee3406c16eea13",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-archive/SKILL.md": {
+    "mtime": 1782696028.8423011,
+    "ast_hash": "a53b5c6e9901214bb51c6dd9b09288b5",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-propose/SKILL.md": {
+    "mtime": 1782696028.8446693,
+    "ast_hash": "ff838b47b954188f5c88751306a17331",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-ask/SKILL.md": {
+    "mtime": 1782696028.8442535,
+    "ast_hash": "be608bd5093514525d7bf3b994f3f74e",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-ingest/SKILL.md": {
+    "mtime": 1782696028.8451436,
+    "ast_hash": "47b0085406018d15a645c7579196764b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-verify/SKILL.md": {
+    "mtime": 1782696028.8430562,
+    "ast_hash": "dc70c5831c8e6330323297462d0d7702",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-apply/SKILL.md": {
+    "mtime": 1782696028.8417287,
+    "ast_hash": "379bc7280d1a96af053c54caa27b3a35",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.claude/skills/spectra-commit/SKILL.md": {
+    "mtime": 1782696028.8467305,
+    "ast_hash": "0e2d9bab072ccae72e9b780e81ca3751",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.github/workflows/deploy.yml": {
+    "mtime": 1776543002.6891131,
+    "ast_hash": "6102d9699210f95bcc59db34599648ee",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/.playwright-cli/page-2026-06-29T02-39-53-346Z.yml": {
+    "mtime": 1782700793.3471713,
+    "ast_hash": "002dcee35f38fe80b4dfbccece9cea4c",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/config.yaml": {
+    "mtime": 1776621213.070252,
+    "ast_hash": "b0460aeb752ba42e441f3fd3e6127d2a",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/course-records/spec.md": {
+    "mtime": 1782702704.8243773,
+    "ast_hash": "1eec1cc073431c4e3658266fd3a42f11",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/user-settings/spec.md": {
+    "mtime": 1777142643.612232,
+    "ast_hash": "aeb414f6ff01143d37f2254c9846b226",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/destructive-clear/spec.md": {
+    "mtime": 1776540116.4411914,
+    "ast_hash": "50c4cf5eadd1554599e19de87849a0ed",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/local-persistence/spec.md": {
+    "mtime": 1782702704.8251038,
+    "ast_hash": "7ada34d9c971ec3ecdd93b13f464af10",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/repo-hygiene/spec.md": {
+    "mtime": 1777142591.6113205,
+    "ast_hash": "203f6f52879da491a027ad44117cc12b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/senior-friendly-ui/spec.md": {
+    "mtime": 1782702704.8263593,
+    "ast_hash": "50acf56a4bb72130b94db541e1e7ee22",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/specs/settings-editor/spec.md": {
+    "mtime": 1777142643.6138003,
+    "ast_hash": "5b03aa938627c8c1ea5e059629c638d1",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-home-screen-icon/.openspec.yaml": {
+    "mtime": 1777142621.656943,
+    "ast_hash": "e344ccfe97030984c102b28722c8f6a4",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-home-screen-icon/tasks.md": {
+    "mtime": 1776883387.6732807,
+    "ast_hash": "4e1dfc9a2afc541c7d7446f2478e0356",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/.openspec.yaml": {
+    "mtime": 1777142643.6146817,
+    "ast_hash": "e344ccfe97030984c102b28722c8f6a4",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/tasks.md": {
+    "mtime": 1776944610.676974,
+    "ast_hash": "216c65ccefe1b02fc680b8ff295a8608",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/design.md": {
+    "mtime": 1776944624.1905096,
+    "ast_hash": "a6be4a55ae458590d090619f1ed71e1a",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/proposal.md": {
+    "mtime": 1776944405.9286368,
+    "ast_hash": "7be85922f15d1aac9ffcaeafc43d52be",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/specs/user-settings/spec.md": {
+    "mtime": 1776944454.3305037,
+    "ast_hash": "b2f544bd25d7fbe2bfa9ffc4f24d5f24",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/specs/senior-friendly-ui/spec.md": {
+    "mtime": 1776944566.4837704,
+    "ast_hash": "605fba690ce597eea837e3a35d80c561",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-settings-entry-and-editor/specs/settings-editor/spec.md": {
+    "mtime": 1776944468.2014418,
+    "ast_hash": "cef4b9b975bd5d48119e36de219d837e",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/.openspec.yaml": {
+    "mtime": 1776540116.442958,
+    "ast_hash": "5918e442bafb0494873d846b5d7eba82",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/tasks.md": {
+    "mtime": 1776539116.2509375,
+    "ast_hash": "3e4f06994ae81b04d3c866b7750c00ec",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/design.md": {
+    "mtime": 1776525120.3582113,
+    "ast_hash": "c37cb982b7c1b82848bd2d164498431d",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/proposal.md": {
+    "mtime": 1776525103.434301,
+    "ast_hash": "b5b3e8c57d8c7da9d904fcad6225f29b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/specs/course-records/spec.md": {
+    "mtime": 1776525138.1734316,
+    "ast_hash": "d70246f9de28e25f31628526a27ec52e",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/specs/user-settings/spec.md": {
+    "mtime": 1776524282.3234303,
+    "ast_hash": "87cc93dbde316a19ed3cbac057e9bc88",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/specs/destructive-clear/spec.md": {
+    "mtime": 1776524337.75035,
+    "ast_hash": "124bcb310dbc50fb9bf651656731003a",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/specs/local-persistence/spec.md": {
+    "mtime": 1776525123.718221,
+    "ast_hash": "1ca0fe3076684544e654663fc19b5975",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-19-add-course-tracker-mvp/specs/senior-friendly-ui/spec.md": {
+    "mtime": 1776524317.6649776,
+    "ast_hash": "8e437c0f00cf2f86c17f29567ee39a92",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-project-gitignore/.openspec.yaml": {
+    "mtime": 1777142591.611976,
+    "ast_hash": "85cbd388cd059ce4ee0a6ea5f5a05ffb",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-project-gitignore/tasks.md": {
+    "mtime": 1776883460.242789,
+    "ast_hash": "3af771c51f0e66e7ef80a3f5047d5eb1",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-project-gitignore/proposal.md": {
+    "mtime": 1776883302.0706892,
+    "ast_hash": "4e2faf3b024a94dfbb8e8476e8099c52",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-04-26-add-project-gitignore/specs/repo-hygiene/spec.md": {
+    "mtime": 1776883317.7454429,
+    "ast_hash": "77a0824231db2de2f488fd0c53a790af",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/.openspec.yaml": {
+    "mtime": 1782702704.8268828,
+    "ast_hash": "51df1b6abff04ffade9658f29bca6585",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/tasks.md": {
+    "mtime": 1782701943.4404368,
+    "ast_hash": "098745f2a9fb0a40cea860b0ba5fd91f",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/design.md": {
+    "mtime": 1782699870.31179,
+    "ast_hash": "5dfa9e7be6382291d0e9623ab3e68bd3",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/proposal.md": {
+    "mtime": 1782699656.3242981,
+    "ast_hash": "41fab39907d2e3ae0f157c12468d3554",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/specs/course-records/spec.md": {
+    "mtime": 1782699738.121198,
+    "ast_hash": "503746a11bbbf892a6df50670b0c2bab",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/specs/local-persistence/spec.md": {
+    "mtime": 1782699728.194976,
+    "ast_hash": "f81f646f8d7cf9df1ae914eaf8c7cb09",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/openspec/changes/archive/2026-06-29-enhance-course-record-entry/specs/senior-friendly-ui/spec.md": {
+    "mtime": 1782699131.3387961,
+    "ast_hash": "55a70966394d3419bed5e341eb92dd1a",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/home-v2.png": {
+    "mtime": 1776540905.5028574,
+    "ast_hash": "c5644493402a4269819bcb8e48dfab65",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/home.png": {
+    "mtime": 1776539013.0526607,
+    "ast_hash": "f6d2e278811fe879f0822fc6b146c2c6",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/confirm-clear-v2.png": {
+    "mtime": 1776540946.042505,
+    "ast_hash": "1e9d7a5763e9d42486245f55484167b2",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/history.png": {
+    "mtime": 1776539040.5024483,
+    "ast_hash": "0a9c6d6ccf201ff8ea8c0c474ae58e5b",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/confirm-add-v2.png": {
+    "mtime": 1776540918.5533552,
+    "ast_hash": "6d6ede671b4cbf1956c2489109e5efb1",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/confirm-add-v3.png": {
+    "mtime": 1776541681.7015836,
+    "ast_hash": "cd6cccb670ba946aad6e8d76812caddd",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/confirm-add.png": {
+    "mtime": 1776539023.6346257,
+    "ast_hash": "da3d7fb8c3c89a635f9f6725b602e41c",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/history-v2.png": {
+    "mtime": 1776540934.0215476,
+    "ast_hash": "87b5a92a3f248eae0c94886d0f0b916e",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/history-v3.png": {
+    "mtime": 1776541692.2357502,
+    "ast_hash": "8ab41fd9c8ca6e8ccadd4f9cfff95213",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/public/icons/apple-touch-icon.png": {
+    "mtime": 1777141950.8407624,
+    "ast_hash": "62e284c321dec34207198b8c0281312d",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/public/icons/icon-192.png": {
+    "mtime": 1777141950.841045,
+    "ast_hash": "7b6d1362ceb76433d4e6858101bb9775",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/public/icons/icon-512-maskable.png": {
+    "mtime": 1777141950.8413785,
+    "ast_hash": "fa2338539f23bd2f274f73ea7de8e4fd",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/public/icons/table-tennis-home.png": {
+    "mtime": 1782701782.5847414,
+    "ast_hash": "bc7eed9ed9a85e46d54c219801ece5c2",
+    "semantic_hash": ""
+  },
+  "/Users/user/Downloads/course-quota-web/public/icons/icon-512.png": {
+    "mtime": 1777141950.8417,
+    "ast_hash": "fa3419a49b27eae593322f8165defc12",
+    "semantic_hash": ""
+  }
+}

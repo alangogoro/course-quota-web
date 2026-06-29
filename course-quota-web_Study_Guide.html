@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>course-quota-web 技術學習手冊</title>
+<style>
+:root {
+  --bg: #1e1e2e; --fg: #cdd6f4; --accent: #89b4fa; --accent2: #f38ba8;
+  --surface: #313244; --code-bg: #181825; --border: #45475a;
+  --green: #a6e3a1; --yellow: #f9e2af; --peach: #fab387;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, "Noto Sans TC", "PingFang TC", sans-serif;
+  background: var(--bg); color: var(--fg);
+  line-height: 1.75; font-size: 16px;
+}
+#toc-trigger {
+  position: fixed; top: 0; left: 0;
+  width: 28px; height: 100vh; z-index: 200;
+}
+#toc-sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 280px; height: 100vh; overflow-y: auto;
+  background: var(--surface); border-right: 1px solid var(--border);
+  padding: 16px 14px 40px; z-index: 199;
+  transform: translateX(-100%); transition: transform 0.25s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+}
+#toc-trigger:hover ~ #toc-sidebar, #toc-sidebar:hover { transform: translateX(0); }
+.toc-title {
+  font-weight: bold; color: var(--yellow); font-size: 15px;
+  margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.toc-group { margin-bottom: 6px; }
+a.toc-h1 {
+  display: block; padding: 6px 8px; border-radius: 5px;
+  font-weight: 700; font-size: 13.5px; color: var(--accent); text-decoration: none;
+}
+a.toc-h1:hover { background: rgba(137,180,250,0.15); }
+.toc-children {
+  padding-left: 12px; border-left: 2px solid var(--border); margin: 2px 0 4px 14px;
+}
+a.toc-h2 {
+  display: block; padding: 3px 8px; border-radius: 4px;
+  font-size: 12.5px; color: #a6adc8; text-decoration: none;
+}
+a.toc-h2:hover { background: rgba(137,180,250,0.1); color: var(--fg); }
+#toc-sidebar a.active { background: rgba(137,180,250,0.2); color: var(--accent); }
+#toc-trigger::after {
+  content: '◂'; position: absolute; top: 50%; left: 6px;
+  transform: translateY(-50%); color: var(--border); font-size: 14px;
+}
+#toc-trigger:hover::after { opacity: 0; }
+#main-content { max-width: 900px; margin: 0 auto; padding: 24px 32px 80px; }
+@media (max-width: 700px) {
+  #toc-trigger, #toc-sidebar { display: none; }
+  #main-content { padding: 16px; }
+}
+h1 { color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 8px; margin: 40px 0 16px; font-size: 1.8em; }
+h2 { color: var(--green); margin: 32px 0 12px; font-size: 1.4em; }
+h3 { color: var(--yellow); margin: 24px 0 8px; font-size: 1.15em; }
+h4 { color: var(--peach); margin: 20px 0 6px; font-size: 1.05em; }
+p { margin: 8px 0; }
+a { color: var(--accent); }
+strong { color: var(--peach); }
+em { color: var(--yellow); font-style: normal; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+blockquote {
+  border-left: 4px solid var(--accent); background: var(--surface);
+  padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0;
+}
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+th { background: var(--surface); color: var(--accent); text-align: left; padding: 8px 10px; border: 1px solid var(--border); }
+td { padding: 8px 10px; border: 1px solid var(--border); }
+tr:nth-child(even) { background: rgba(49,50,68,0.4); }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px; overflow-x: auto; margin: 12px 0; }
+code { font-family: "SF Mono","Fira Code","JetBrains Mono",monospace; font-size: 14px; }
+p > code, li > code, td > code {
+  background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 13px; color: var(--accent2);
+}
+ul, ol { padding-left: 24px; margin: 8px 0; }
+li { margin: 4px 0; }
+#back-top {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--accent); color: var(--bg); border: none;
+  width: 44px; height: 44px; border-radius: 50%; font-size: 20px;
+  cursor: pointer; display: none; z-index: 99;
+}
+</style>
+</head>
+<body>
+<div id="toc-trigger"></div>
+<nav id="toc-sidebar">
+<div class="toc-title">📚 目錄導覽</div>
+<div class="toc-group">
+  <a href="#course-quota-web-技術學習手冊" class="toc-h1">course-quota-web 技術學習手冊</a>
+  <div class="toc-children">
+    <a href="#目錄" class="toc-h2">目錄</a>
+    <a href="#1-專案概覽" class="toc-h2">1. 專案概覽</a>
+    <a href="#2-Graphify-探勘結果" class="toc-h2">2. Graphify 探勘結果</a>
+    <a href="#3-前端頁面狀態機" class="toc-h2">3. 前端頁面狀態機</a>
+    <a href="#4-IndexedDB-資料層" class="toc-h2">4. IndexedDB 資料層</a>
+    <a href="#5-設定頁模組化" class="toc-h2">5. 設定頁模組化</a>
+    <a href="#6-安全操作閘門" class="toc-h2">6. 安全操作閘門</a>
+    <a href="#7-長輩友善-UI-系統" class="toc-h2">7. 長輩友善 UI 系統</a>
+    <a href="#8-規格驅動開發" class="toc-h2">8. 規格驅動開發</a>
+    <a href="#9-工程品質與建議" class="toc-h2">9. 工程品質與建議</a>
+    <a href="#附錄-常用指令" class="toc-h2">附錄：常用指令</a>
+  </div>
+</div>
+</nav>
+<div id="main-content">
+<h1 id="course-quota-web-技術學習手冊">course-quota-web 技術學習手冊</h1>
+<blockquote>產生日期：2026-06-29
+探勘方式：使用本機 <code>graphify</code> CLI 產生 AST code graph，並交叉閱讀 <code>src/</code> 與 <code>openspec/specs/</code>。
+一句話：這是一個給 Cindy 使用的本機桌球課程名額追蹤 PWA，重點是「長輩友善 UI、IndexedDB 本機持久化、明確確認閘門、規格驅動維護」。</blockquote>
+<h2 id="目錄">目錄</h2>
+<table>
+<tr><th>章節</th><th>主題</th><th>核心素材</th></tr>
+<tr><td>1</td><td>專案概覽</td><td>Vite、TypeScript、IndexedDB、Spectra</td></tr>
+<tr><td>2</td><td>Graphify 探勘結果</td><td>810 nodes / 787 edges、核心 call graph</td></tr>
+<tr><td>3</td><td>前端頁面狀態機</td><td><code>navigate()</code>、<code>showHome()</code>、<code>showHistory()</code></td></tr>
+<tr><td>4</td><td>IndexedDB 資料層</td><td><code>getDB()</code>、<code>addCourse()</code>、<code>clearRecords()</code></td></tr>
+<tr><td>5</td><td>設定頁模組化</td><td><code>showSettings()</code>、<code>saveSettings()</code></td></tr>
+<tr><td>6</td><td>安全操作閘門</td><td>新增確認、清空片語閘門</td></tr>
+<tr><td>7</td><td>長輩友善 UI 系統</td><td>CSS tokens、48px touch target、可讀字級</td></tr>
+<tr><td>8</td><td>規格驅動開發</td><td><code>openspec/specs/*</code> 與 trace</td></tr>
+<tr><td>9</td><td>工程品質與建議</td><td>strict TS、風險點、後續測試</td></tr>
+<h2 id="1-專案概覽">1. 專案概覽</h2>
+<h3 id="Domain">Domain</h3>
+</table>
+<p><code>course-quota-web</code> 是一個 local-only Android mobile web tool，用於追蹤 Cindy 的桌球課程上課堂數。它不依賴後端，也不做帳號登入，權威資料存在使用者裝置瀏覽器的 IndexedDB。</p>
+<h3 id="技術棧">技術棧</h3>
+<table>
+<tr><th>類別</th><th>使用內容</th><th>說明</th></tr>
+<tr><td>Runtime</td><td>Browser / DOM</td><td>單頁式前端，直接操作 DOM</td></tr>
+<tr><td>Build</td><td>Vite 5</td><td><code>npm run dev</code>、<code>npm run build</code></td></tr>
+<tr><td>Language</td><td>TypeScript 5</td><td><code>strict</code>、<code>noUncheckedIndexedAccess</code>、<code>exactOptionalPropertyTypes</code></td></tr>
+<tr><td>Storage</td><td>IndexedDB</td><td><code>settings</code> 與 <code>records</code> object stores</td></tr>
+<tr><td>Spec</td><td>Spectra / OpenSpec</td><td>規格放在 <code>openspec/specs/</code>，已歸檔變更放在 <code>openspec/changes/archive/</code></td></tr>
+<tr><td>PWA</td><td>Manifest + icons</td><td><code>public/manifest.webmanifest</code> 與 icons</td></tr>
+<h3 id="精簡目錄樹">精簡目錄樹</h3>
+<pre><code class="language-text">
+course-quota-web/
+├── src/
+│   ├── main.ts
+│   ├── db/db.ts
+│   ├── features/settings/index.ts
+│   └── styles/base.css
+├── openspec/
+│   ├── specs/
+│   └── changes/archive/
+├── public/
+│   ├── manifest.webmanifest
+│   └── icons/
+├── graphify-out/
+│   ├── graph.json
+│   └── GRAPH_TREE.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+</code></pre>
+<h3 id="架構模式">架構模式</h3>
+</table>
+<p>這個專案採用「小型模組化 SPA」：</p>
+<ul>
+<li><code>src/main.ts</code>：頁面 router、主要 UI render、流程控制。</li>
+<li><code>src/db/db.ts</code>：IndexedDB repository/data access layer。</li>
+<li><code>src/features/settings/index.ts</code>：設定頁 feature module。</li>
+<li><code>src/styles/base.css</code>：設計 token 與所有 UI class。</li>
+<li><code>openspec/specs/*</code>：產品規格、行為要求與驗收條件。</li>
+</ul>
+<h2 id="2-Graphify-探勘結果">2. Graphify 探勘結果</h2>
+<h3 id="執行方式">執行方式</h3>
+<p>本機沒有名為 <code>graphify-cli</code> 的 binary，但有 <code>/Users/user/.local/bin/graphify</code>。因 <code>graphify extract</code> 可能將 repo 內容送到外部 LLM/API，未獲安全授權；本次改用 help 標示為 no-LLM 的本機 AST 更新：</p>
+<pre><code class="language-bash">
+/Users/user/.local/bin/graphify update . --no-cluster
+/Users/user/.local/bin/graphify tree \
+  --graph graphify-out/graph.json \
+  --output graphify-out/GRAPH_TREE.html \
+  --root /Users/user/Downloads/course-quota-web \
+  --label course-quota-web
+</code></pre>
+<p>產出：</p>
+<ul>
+<li><code>graphify-out/graph.json</code>：810 nodes、787 edges。</li>
+<li><code>graphify-out/GRAPH_TREE.html</code>：graphify 可視化樹。</li>
+</ul>
+<h3 id="Graphify-找到的核心節點">Graphify 找到的核心節點</h3>
+<table>
+<tr><th>節點</th><th>來源</th><th>Graphify 關係重點</th></tr>
+<tr><td><code>navigate()</code></td><td><code>src/main.ts:25</code></td><td>call 到 <code>showHome()</code>、<code>showConfirmAdd()</code>、<code>showHistory()</code>、<code>showConfirmClear()</code>、<code>showSettings()</code></td></tr>
+<tr><td><code>showHome()</code></td><td><code>src/main.ts:70</code></td><td>call 到 <code>getSettings()</code>、<code>countAttended()</code>、<code>escHtml()</code>、<code>gearSVG()</code></td></tr>
+<tr><td><code>showSettings()</code></td><td><code>src/features/settings/index.ts:3</code></td><td>被 <code>navigate()</code> 呼叫，call 到 <code>getSettings()</code>、<code>saveSettings()</code>、<code>escHtml()</code></td></tr>
+<tr><td><code>getDB()</code></td><td><code>src/db/db.ts:25</code></td><td>被所有資料操作呼叫，call 到 <code>openDB()</code>、<code>seedIfNeeded()</code></td></tr>
+<tr><td><code>addCourse()</code></td><td><code>src/db/db.ts:101</code></td><td>被 <code>main.ts</code> 匯入，call 到 <code>getDB()</code></td></tr>
+<tr><td><code>clearRecords()</code></td><td><code>src/db/db.ts:142</code></td><td>被 <code>main.ts</code> 匯入，call 到 <code>getDB()</code></td></tr>
+<h3 id="簡化-call-graph">簡化 call graph</h3>
+<pre><code class="language-mermaid">
+flowchart TD
+  A[&quot;navigate(page)&quot;] --&gt; B[&quot;showHome()&quot;]
+  A --&gt; C[&quot;showConfirmAdd()&quot;]
+  A --&gt; D[&quot;showHistory()&quot;]
+  A --&gt; E[&quot;showConfirmClear()&quot;]
+  A --&gt; F[&quot;showSettings(app, navigate)&quot;]
+
+  B --&gt; G[&quot;getSettings()&quot;]
+  B --&gt; H[&quot;countAttended()&quot;]
+  C --&gt; I[&quot;addCourse(date, weekday)&quot;]
+  D --&gt; J[&quot;getAllRecords()&quot;]
+  E --&gt; K[&quot;clearRecords()&quot;]
+  F --&gt; G
+  F --&gt; L[&quot;saveSettings(name, maxCourseCount)&quot;]
+
+  G --&gt; M[&quot;getDB()&quot;]
+  H --&gt; M
+  I --&gt; M
+  J --&gt; M
+  K --&gt; M
+  L --&gt; M
+  M --&gt; N[&quot;openDB()&quot;]
+  M --&gt; O[&quot;seedIfNeeded()&quot;]
+</code></pre>
+<h2 id="3-前端頁面狀態機">3. 前端頁面狀態機</h2>
+<h3 id="情境白話解釋">情境白話解釋</h3>
+</table>
+<p>這個 app 沒有 React Router 或 Vue Router，而是用一個小型 <code>navigate(page)</code> 函式控制整個畫面。可以把它想成一台只有五個按鈕的簡單機器：首頁、確認新增、歷史、確認清空、設定。每次切頁時先清空 <code>#app</code>，再依 page render 對應畫面。</p>
+<h3 id="技術要點">技術要點</h3>
+<table>
+<tr><th>技術</th><th>白話說明</th><th>為什麼用</th></tr>
+<tr><td>Union type <code>Page</code></td><td>限制合法頁面名稱</td><td>防止打錯 route string</td></tr>
+<tr><td><code>switch(page)</code></td><td>明確列出所有頁面</td><td>小 app 可讀性高</td></tr>
+<tr><td><code>async navigate()</code></td><td>支援需要讀 IndexedDB 的頁面</td><td><code>showHome()</code>、<code>showHistory()</code>、<code>showSettings()</code> 都需要非同步資料</td></tr>
+<tr><td><code>pendingDate</code></td><td>進入確認頁時凍結日期</td><td>避免使用者停在確認頁跨日時，畫面日期與寫入日期不一致</td></tr>
+<tr><td>try/catch</td><td>導覽失敗時顯示錯誤</td><td>避免整頁空白</td></tr>
+<h3 id="STAR-口述版">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>這是一個功能很聚焦的本機課程追蹤工具，頁面數少，但每個寫入動作都需要明確確認。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>要用低複雜度方式管理頁面切換，同時確保新增與清空流程不能被意外觸發。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>我用 TypeScript union type 定義頁面集合，集中由 <code>navigate()</code> 控制 render，並在進入 <code>confirm-add</code> 時先固定當下日期。每個頁面只註冊自己需要的事件 handler。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>整體流程清楚，Graphify 顯示 <code>navigate()</code> 是主要 hub，直接連到五個畫面 render function，維護時可以很快找到每條使用者路徑。</p>
+<h3 id="追問-Q-amp-A">追問 Q&amp;A</h3>
+<p><strong>Q1：為什麼不用大型前端框架？</strong></p>
+<p>A：專案頁面與狀態都很少，資料狀態主要在 IndexedDB。直接 DOM render 可以降低依賴與部署複雜度，符合 local-only 小工具。</p>
+<p><strong>Q2：<code>pendingDate</code> 為什麼不是按確認時才取？</strong></p>
+<p>A：使用者看到確認頁時，畫面已經承諾「今天是某日」。按確認時若重新取日期，可能跨日導致畫面與資料不一致。</p>
+<p><strong>Q3：這種 router 的風險是什麼？</strong></p>
+<p>A：所有 HTML 都靠 template string，若資料沒有 escape 會有 XSS 風險；目前 user-controlled name/note 需要持續維持 <code>escHtml()</code> 防線。</p>
+<h4 id="關鍵-Code-Snippet">關鍵 Code Snippet</h4>
+<blockquote>📂 <code>src/main.ts</code>（25-66 行）</blockquote>
+<pre><code class="language-ts">
+async function navigate(page: Page): Promise&lt;void&gt; {
+  if (page === &quot;confirm-add&quot;) {
+    const now = new Date();
+    const y = now.getFullYear();
+    const mo = String(now.getMonth() + 1).padStart(2, &quot;0&quot;);
+    const d = String(now.getDate()).padStart(2, &quot;0&quot;);
+    const m = now.getMonth() + 1;
+    const day = now.getDate();
+    const w = now.getDay();
+    pendingDate = {
+      iso: `${y}-${mo}-${d}`,
+      weekday: w,
+      label: `今天是 ${m} 月 ${day} 日 星期${WEEKDAY_ZH[w]}`,
+      datePart: `今天是 ${m} 月 ${day} 日`,
+      weekPart: `星期${WEEKDAY_ZH[w]}`,
+    };
+  }
+  app.innerHTML = &quot;&quot;;
+  try {
+    switch (page) {
+      case &quot;home&quot;:
+        await showHome();
+        break;
+      case &quot;confirm-add&quot;:
+        showConfirmAdd();
+        break;
+      case &quot;history&quot;:
+        await showHistory();
+        break;
+      case &quot;confirm-clear&quot;:
+        showConfirmClear();
+        break;
+      case &quot;settings&quot;:
+        await showSettings(app, navigate);
+        break;
+    }
+  } catch (err) {
+    console.error(&quot;Navigation error:&quot;, err);
+    app.innerHTML =
+      &#x27;&lt;p class=&quot;text-muted&quot; style=&quot;padding:1rem&quot;&gt;載入失敗，請重新整理頁面。&lt;/p&gt;&#x27;;
+  }
+}
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li><code>page === &quot;confirm-add&quot;</code>：只有進入新增確認頁時固定日期。</li>
+<li><code>pendingDate.iso</code>：給資料層使用，格式是 <code>YYYY-MM-DD</code>。</li>
+<li><code>pendingDate.datePart/weekPart</code>：給 UI 顯示使用。</li>
+<li><code>app.innerHTML = &quot;&quot;</code>：每次導覽重新建立畫面。</li>
+<li><code>switch(page)</code>：所有頁面入口集中在一處，Graphify 也能清楚辨識 call graph。</li>
+<li><code>catch</code>：IndexedDB 或 render 發生錯誤時，至少讓使用者看到失敗訊息。</li>
+</ul>
+<h2 id="4-IndexedDB-資料層">4. IndexedDB 資料層</h2>
+<h3 id="情境白話解釋-1">情境白話解釋</h3>
+<p>IndexedDB 是這個 app 的「小型本機資料庫」。<code>settings</code> 像系統設定表，放使用者名字、目標堂數與 sequence；<code>records</code> 像上課紀錄表，保存每次上課資料。這裡最關鍵的是 <code>courseNumber</code> 永不重用，所以 sequence 不能因清空紀錄而歸零。</p>
+<h3 id="技術要點-1">技術要點</h3>
+<table>
+<tr><th>技術</th><th>白話說明</th><th>為什麼用</th></tr>
+<tr><td><code>getDB()</code> singleton cache</td><td>同一個 session 重用 DB connection</td><td>減少重複 open IndexedDB</td></tr>
+<tr><td><code>onupgradeneeded</code></td><td>建立 object stores</td><td>IndexedDB schema migration 入口</td></tr>
+<tr><td><code>seedIfNeeded()</code></td><td>首次建立預設設定</td><td>首頁可直接顯示 Cindy / 100</td></tr>
+<tr><td><code>settings.sequence</code></td><td>保存最後分配過的 <code>courseNumber</code></td><td>清空後也不重用序號</td></tr>
+<tr><td>multi-store transaction</td><td>新增課程同時寫 <code>settings</code> 與 <code>records</code></td><td>確保 sequence 與 record 一起 commit</td></tr>
+<tr><td><code>records.clear()</code></td><td>只清空紀錄 store</td><td>保留設定與 sequence</td></tr>
+<h3 id="STAR-口述版-1">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>課程紀錄要在瀏覽器重啟後仍存在，而且清空紀錄後，新紀錄的內部序號不能重複。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>設計一個不用後端的資料層，同時支援持久化、預設設定、原子新增與安全清空。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>我把 IndexedDB 分成 <code>settings</code> 與 <code>records</code> 兩個 store。新增課程時使用涵蓋兩個 store 的 readwrite transaction，先讀 <code>sequence</code>，建立 <code>courseNumber = sequence + 1</code> 的 record，再把 sequence 更新為新值。清空時只清 <code>records</code>，不碰 <code>settings</code>。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>資料流與規格一致：Graphify 顯示所有資料操作都匯入 <code>getDB()</code>；OpenSpec 也明確要求 IndexedDB 是唯一權威儲存、寫入需原子化、sequence 不可重設。</p>
+<h3 id="追問-Q-amp-A-1">追問 Q&amp;A</h3>
+<p><strong>Q1：為什麼不用 <code>autoIncrement</code>？</strong></p>
+<p>A：規格要求 <code>courseNumber</code> 的語意由 app 控制，而且清空後仍不可重用。自行維護 sequence 可以讓語意更明確。</p>
+<p><strong>Q2：新增課程為什麼要同時開 <code>settings</code> 和 <code>records</code> transaction？</strong></p>
+<p>A：新增 record 與更新 sequence 是同一個邏輯操作，若分成兩個 transaction，可能產生只寫入其中一邊的部分狀態。</p>
+<p><strong>Q3：<code>clearRecords()</code> 為什麼不重設 sequence？</strong></p>
+<p>A：規格要求清空後新增不重用舊的 <code>courseNumber</code>。sequence 的語意是「最後一次已分配的序號」，不是目前 records 的最大值。</p>
+<h4 id="關鍵-Code-Snippet-1">關鍵 Code Snippet</h4>
+<blockquote>📂 <code>src/db/db.ts</code>（100-123 行）</blockquote>
+<pre><code class="language-ts">
+export async function addCourse(attendedDate: string, weekday: number): Promise&lt;void&gt; {
+  const db = await getDB();
+  return new Promise((resolve, reject) =&gt; {
+    const tx = db.transaction([&quot;settings&quot;, &quot;records&quot;], &quot;readwrite&quot;);
+    const settingsStore = tx.objectStore(&quot;settings&quot;);
+    const recordsStore = tx.objectStore(&quot;records&quot;);
+    const seqReq = settingsStore.get(&quot;sequence&quot;);
+    seqReq.onsuccess = () =&gt; {
+      const seq = seqReq.result as SequenceEntry;
+      const courseNumber = seq.value + 1;
+      recordsStore.put({
+        courseNumber,
+        attended: true,
+        attendedDate,
+        weekday,
+        note: &quot;&quot;,
+      } as CourseRecord);
+      settingsStore.put({ key: &quot;sequence&quot;, value: courseNumber } as SequenceEntry);
+    };
+    seqReq.onerror = () =&gt; reject(seqReq.error);
+    tx.oncomplete = () =&gt; resolve();
+    tx.onerror = () =&gt; reject(tx.error);
+  });
+}
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li><code>db.transaction([&quot;settings&quot;, &quot;records&quot;], &quot;readwrite&quot;)</code>：同時鎖定兩個 store。</li>
+<li><code>settingsStore.get(&quot;sequence&quot;)</code>：讀取最後一次分配過的序號。</li>
+<li><code>seq.value + 1</code>：分配下一個 courseNumber。</li>
+<li><code>recordsStore.put(...)</code>：寫入新的課程紀錄。</li>
+<li><code>settingsStore.put(...)</code>：把 sequence 更新為已分配的新值。</li>
+<li><code>tx.oncomplete</code>：等整個 transaction 完成才 resolve。</li>
+</ul>
+<blockquote>📂 <code>src/db/db.ts</code>（141-149 行）</blockquote>
+<pre><code class="language-ts">
+export async function clearRecords(): Promise&lt;void&gt; {
+  const db = await getDB();
+  return new Promise((resolve, reject) =&gt; {
+    const tx = db.transaction(&quot;records&quot;, &quot;readwrite&quot;);
+    tx.objectStore(&quot;records&quot;).clear();
+    tx.oncomplete = () =&gt; resolve();
+    tx.onerror = () =&gt; reject(tx.error);
+  });
+}
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li>transaction 只開 <code>records</code>，表示清空不會碰 <code>settings</code>。</li>
+<li><code>sequence</code> 不會歸零，因此後續新增會繼續往上。</li>
+</ul>
+<h2 id="5-設定頁模組化">5. 設定頁模組化</h2>
+<h3 id="情境白話解釋-2">情境白話解釋</h3>
+<p>設定頁從主檔案拆出來，像把「個人資料編輯」做成獨立功能。首頁只知道要導向設定頁，不需要知道表單驗證細節；設定頁自己負責讀設定、渲染欄位、驗證、儲存、取消。</p>
+<h3 id="技術要點-2">技術要點</h3>
+<table>
+<tr><th>技術</th><th>白話說明</th><th>為什麼用</th></tr>
+<tr><td>Feature module</td><td><code>src/features/settings/index.ts</code></td><td>避免 <code>main.ts</code> 持續膨脹</td></tr>
+<tr><td><code>showSettings(app, navigate)</code></td><td>外部傳入 mount point 與導覽函式</td><td>模組不直接依賴全域 router</td></tr>
+<tr><td>input validation</td><td>名稱非空、最多 50；目標堂數 1-9999</td><td>保護資料品質</td></tr>
+<tr><td><code>escHtml(settings.name)</code></td><td>settings value 放入 HTML 前 escape</td><td>降低 XSS 風險</td></tr>
+<tr><td>save/cancel 分流</td><td>儲存才寫 DB，取消只回首頁</td><td>符合規格</td></tr>
+<h3 id="STAR-口述版-2">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>MVP 後加入設定編輯功能，若全部塞在 <code>main.ts</code>，router、首頁、歷史、表單驗證會混在一起。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>要把設定功能拆成可維護的 feature，同時保持小專案的簡單度。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>我新增 <code>features/settings</code> 模組，讓它接收 <code>app</code> 與 <code>navigate</code>，內部自行讀取設定、渲染表單、驗證輸入與呼叫 <code>saveSettings()</code>。成功儲存後回首頁，讓首頁重新從 IndexedDB 讀最新值。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>Graphify 顯示 <code>showSettings()</code> 只有清楚的六個關係：由 <code>navigate()</code> 呼叫，匯入/呼叫 <code>getSettings()</code>、<code>saveSettings()</code>、<code>escHtml()</code>、<code>chevronLeftSVG()</code>，模組邊界明確。</p>
+<h3 id="追問-Q-amp-A-2">追問 Q&amp;A</h3>
+<p><strong>Q1：為什麼 <code>showSettings()</code> 只允許 <code>navigate(page: &quot;home&quot;)</code>？</strong></p>
+<p>A：設定頁目前只需要回首頁，型別收窄可避免 feature module 任意導向其他頁。</p>
+<p><strong>Q2：為什麼目標堂數用 text input 而不是 number input？</strong></p>
+<p>A：行動裝置可用 <code>inputmode=&quot;numeric&quot;</code> 叫出數字鍵盤，同時避免 number input 在不同瀏覽器上的 spinner 與格式差異。</p>
+<p><strong>Q3：儲存後為什麼不用全域 store 立即更新首頁？</strong></p>
+<p>A：規格要求首頁 route entry 重新讀 IndexedDB。這讓資料來源單一，不需要額外同步機制。</p>
+<h4 id="關鍵-Code-Snippet-2">關鍵 Code Snippet</h4>
+<blockquote>📂 <code>src/features/settings/index.ts</code>（59-88 行）</blockquote>
+<pre><code class="language-ts">
+function validate(): boolean {
+  let valid = true;
+  const name = nameInput.value.trim();
+  if (name.length === 0) {
+    nameError.textContent = &quot;名稱不可空白&quot;;
+    valid = false;
+  } else if (name.length &gt; 50) {
+    nameError.textContent = &quot;名稱最多 50 個字&quot;;
+    valid = false;
+  } else {
+    nameError.textContent = &quot;&quot;;
+  }
+
+  const maxRaw = maxInput.value.trim();
+  const maxVal = Number(maxRaw);
+  if (maxRaw === &quot;&quot; || !Number.isInteger(maxVal) || maxVal &lt; 1 || maxVal &gt; 9999) {
+    maxError.textContent = &quot;請輸入 1 到 9999 之間的整數&quot;;
+    valid = false;
+  } else {
+    maxError.textContent = &quot;&quot;;
+  }
+
+  return valid;
+}
+
+saveBtn.addEventListener(&quot;click&quot;, async () =&gt; {
+  if (!validate()) return;
+  saveBtn.disabled = true;
+  await saveSettings(nameInput.value.trim(), Number(maxInput.value.trim()));
+  navigate(&quot;home&quot;);
+});
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li><code>trim()</code>：避免空白名稱或數值。</li>
+<li><code>Number.isInteger(maxVal)</code>：確保目標堂數是整數。</li>
+<li><code>1..9999</code>：限制合理範圍。</li>
+<li><code>saveBtn.disabled = true</code>：避免重複點擊造成重複寫入。</li>
+<li>儲存成功後 <code>navigate(&quot;home&quot;)</code>：首頁重新讀取 DB 顯示最新設定。</li>
+</ul>
+<h2 id="6-安全操作閘門">6. 安全操作閘門</h2>
+<h3 id="情境白話解釋-3">情境白話解釋</h3>
+<p>這個 app 有兩種會改資料的操作：新增上課紀錄、清空所有紀錄。新增需要確認頁，清空則需要輸入完整片語。這像是在危險按鈕前面加兩道門，避免使用者手滑。</p>
+<h3 id="技術要點-3">技術要點</h3>
+<table>
+<tr><th>操作</th><th>防線</th><th>實作位置</th></tr>
+<tr><td>新增紀錄</td><td>先進 <code>confirm-add</code>，按 <code>確認新增</code> 才寫入</td><td><code>src/main.ts:120-145</code></td></tr>
+<tr><td>取消新增</td><td>回首頁，不呼叫 <code>addCourse()</code></td><td><code>src/main.ts:135-137</code></td></tr>
+<tr><td>清空紀錄</td><td>從 history 入口進入 <code>confirm-clear</code></td><td><code>src/main.ts:181-182</code></td></tr>
+<tr><td>啟用清空</td><td><code>normalize(&quot;NFC&quot;) === CLEAR_PHRASE</code></td><td><code>src/main.ts:245-254</code></td></tr>
+<tr><td>執行清空</td><td>按鈕與 input disabled 後呼叫 <code>clearRecords()</code></td><td><code>src/main.ts:253-258</code></td></tr>
+<h3 id="STAR-口述版-3">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>使用者可能在手機上操作，新增與清空都容易因誤觸造成資料變更，尤其清空不可復原。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>要讓資料變更只來自明確意圖，並讓清空流程足夠難以誤觸。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>新增流程先顯示本地日期確認頁，使用者按確認才呼叫 <code>addCourse()</code>。清空流程只能從歷史頁進入，畫面顯示不可復原警示，必須輸入 <code>刪除全部上課紀錄</code> 且 NFC 正規化後逐字相符才啟用按鈕。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>OpenSpec 對新增確認與 destructive clear 有明確 scenario；程式碼也把清空與新增的 DB 寫入集中在確認後的 click handler。</p>
+<h3 id="追問-Q-amp-A-3">追問 Q&amp;A</h3>
+<p><strong>Q1：為什麼要用 NFC 正規化？</strong></p>
+<p>A：中文輸入法或不同系統可能產生不同 Unicode 組合，NFC 正規化讓等價字元表示更穩定。</p>
+<p><strong>Q2：為什麼清空入口只放在歷史頁？</strong></p>
+<p>A：清空是針對紀錄列表的破壞性操作，從歷史頁進入語意最清楚，也避免首頁誤觸。</p>
+<p><strong>Q3：按清空後為什麼要 disable input/button？</strong></p>
+<p>A：避免 transaction 尚未完成時重複觸發。</p>
+<h4 id="關鍵-Code-Snippet-3">關鍵 Code Snippet</h4>
+<blockquote>📂 <code>src/main.ts</code>（245-258 行）</blockquote>
+<pre><code class="language-ts">
+input.addEventListener(&quot;input&quot;, () =&gt; {
+  clearBtn.disabled = input.value.normalize(&quot;NFC&quot;) !== CLEAR_PHRASE;
+});
+
+clearBtn.addEventListener(&quot;click&quot;, async () =&gt; {
+  if (input.value.normalize(&quot;NFC&quot;) !== CLEAR_PHRASE) return;
+  clearBtn.disabled = true;
+  input.disabled = true;
+  await clearRecords();
+  navigate(&quot;home&quot;);
+});
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li><code>input</code> 事件每次重新判斷片語。</li>
+<li>不相符就保持 disabled。</li>
+<li>click handler 再檢查一次，避免只靠 UI disabled。</li>
+<li>寫入前先 disable 控制項，減少重複提交。</li>
+</ul>
+<h2 id="7-長輩友善-UI-系統">7. 長輩友善 UI 系統</h2>
+<h3 id="情境白話解釋-4">情境白話解釋</h3>
+<p>這個工具不是一般後台或密集表格，而是給特定使用者在手機上快速記錄。CSS 設計重點是大字、清楚按鈕、足夠觸控面積、明確狀態色。</p>
+<h3 id="技術要點-4">技術要點</h3>
+<table>
+<tr><th>設計點</th><th>實作</th><th>說明</th></tr>
+<tr><td>大字級</td><td><code>--font-size-base: 1.125rem</code></td><td>body 最小 18px</td></tr>
+<tr><td>觸控目標</td><td><code>--tap-min: 3rem</code></td><td>48px minimum touch target</td></tr>
+<tr><td>色彩 token</td><td><code>--color-primary</code>、<code>--color-danger</code>、<code>--color-success</code></td><td>操作語意清楚</td></tr>
+<tr><td>focus ring</td><td><code>:focus-visible</code></td><td>鍵盤/輔助操作可辨識</td></tr>
+<tr><td>mobile width</td><td><code>#app { max-width: 30rem }</code></td><td>手機閱讀寬度</td></tr>
+<tr><td>progressbar ARIA</td><td><code>role=&quot;progressbar&quot;</code></td><td>首頁進度可被輔助工具理解</td></tr>
+<h3 id="STAR-口述版-4">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>使用者主要在手機上操作，且操作情境要求「看得清楚、按得準、不要誤觸」。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>要建立一套簡單但一致的 UI token，讓新增、取消、清空等動作有清楚層級。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>我在 <code>:root</code> 定義字級、間距、radius、語意色與 tap size，按鈕共用 <code>.btn-primary/.btn-ghost/.btn-danger</code> 基礎樣式，並使用 progressbar ARIA 與 focus-visible 提升可及性。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>UI 不需要元件框架也能維持一致。規格中的 senior-friendly-ui 可直接對照到 CSS token 與 DOM 屬性。</p>
+<h3 id="追問-Q-amp-A-4">追問 Q&amp;A</h3>
+<p><strong>Q1：為什麼 body font-size 設 18px？</strong></p>
+<p>A：長輩友善場景下，可讀性比資訊密度重要。18px 是較穩妥的基準。</p>
+<p><strong>Q2：為什麼 danger button 與 ghost danger 分開？</strong></p>
+<p>A：歷史頁的清空入口是進入流程，不是立即刪除，所以用 danger ghost；真正清空按鈕才用實心 danger。</p>
+<p><strong>Q3：為什麼不使用深色模式？</strong></p>
+<p>A：目前 <code>color-scheme: light</code>，產品目標是簡單、穩定、可讀。若要支援 dark mode，應先補規格與截圖驗證。</p>
+<h4 id="關鍵-Code-Snippet-4">關鍵 Code Snippet</h4>
+<blockquote>📂 <code>src/styles/base.css</code>（20-66 行）</blockquote>
+<pre><code class="language-css">
+:root {
+  color-scheme: light;
+
+  --color-bg: #F7F2ED;
+  --color-surface: #FFFFFF;
+  --color-primary: #1A6FB5;
+  --color-success: #15803D;
+  --color-danger: #B91C1C;
+  --color-text: #1C2B3A;
+  --color-focus-ring: #F59E0B;
+
+  --font-size-base: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-4xl: 3.25rem;
+
+  --sp-1: 0.5rem;
+  --sp-4: 1.5rem;
+  --sp-6: 3rem;
+
+  --tap-min: 3rem;
+  --radius-full: 9999px;
+}
+</code></pre>
+<p>逐行重點：</p>
+<ul>
+<li>顏色以語意命名，不以畫面位置命名。</li>
+<li><code>--font-size-base</code> 直接服務可讀性。</li>
+<li><code>--tap-min</code> 把觸控尺寸變成全站 token。</li>
+</ul>
+<h2 id="8-規格驅動開發">8. 規格驅動開發</h2>
+<h3 id="情境白話解釋-5">情境白話解釋</h3>
+<p>這個 repo 不是只有程式碼，還有規格。<code>openspec/specs/</code> 描述系統必須做到什麼，<code>src/</code> 則是目前的實作。這讓維護者可以從規格理解「為什麼這段程式要這樣寫」。</p>
+<h3 id="關鍵-spec-對照">關鍵 spec 對照</h3>
+<table>
+<tr><th>Spec</th><th>要求</th><th>對應程式</th></tr>
+<tr><td><code>local-persistence</code></td><td>IndexedDB 是唯一主資料儲存</td><td><code>src/db/db.ts</code></td></tr>
+<tr><td><code>course-records</code></td><td>record 五欄位、courseNumber 自動遞增、不重用</td><td><code>CourseRecord</code>、<code>addCourse()</code></td></tr>
+<tr><td><code>destructive-clear</code></td><td>清空需片語閘門，且保留 settings/sequence</td><td><code>showConfirmClear()</code>、<code>clearRecords()</code></td></tr>
+<tr><td><code>senior-friendly-ui</code></td><td>首頁、確認頁、歷史頁要清楚可讀</td><td><code>src/main.ts</code>、<code>src/styles/base.css</code></td></tr>
+<tr><td><code>user-settings</code></td><td>設定頁讀寫 IndexedDB，儲存後回首頁重新讀取</td><td><code>showSettings()</code>、<code>saveSettings()</code></td></tr>
+<h3 id="STAR-口述版-5">STAR 口述版</h3>
+</table>
+<p><strong>情境 (Situation)：</strong></p>
+<p>小工具後續仍會演進，例如加設定頁、加 icon、調整清空流程。如果只靠程式碼，很容易忘記原始約束。</p>
+<p><strong>任務 (Task)：</strong></p>
+<p>要讓每個需求都有可追溯的規格依據，避免改功能時破壞既有承諾。</p>
+<p><strong>行動 (Action)：</strong></p>
+<p>使用 Spectra/OpenSpec 把需求拆成能力規格，包含 Requirement、Scenario 與 trace。實作時依 spec 修改，完成後歸檔 change。</p>
+<p><strong>成果 (Result)：</strong></p>
+<p>Graphify 圖譜不只抽到 source code，也抽到 OpenSpec 文件節點；例如 IndexedDB、courseNumber、settings editor、destructive clear 都能從 spec 連回程式意圖。</p>
+<h3 id="追問-Q-amp-A-5">追問 Q&amp;A</h3>
+<p><strong>Q1：規格會不會太重？</strong></p>
+<p>A：對小 app 來說，如果未來很少改，規格可能偏重；但這個 repo 已經有多次變更與歸檔，規格能避免破壞清空/序號這類細節。</p>
+<p><strong>Q2：spec 與 code 不一致時怎麼辦？</strong></p>
+<p>A：先判斷產品意圖是否變更。若意圖變更，先走 proposal/ingest 更新 spec；若 code 偏離 spec，修 code。</p>
+<p><strong>Q3：Graphify 在這裡的價值是什麼？</strong></p>
+<p>A：它能快速標出 code 與 document 節點，以及 hub function。對小 repo 來說不是取代閱讀，而是加速定位。</p>
+<h2 id="9-工程品質與建議">9. 工程品質與建議</h2>
+<h3 id="目前優點">目前優點</h3>
+<ul>
+<li>架構簡單，模組邊界清楚。</li>
+<li>IndexedDB 寫入有 transaction 思維。</li>
+<li>清空流程有片語閘門與二次檢查。</li>
+<li>UI token 明確，適合 mobile 與長輩友善使用。</li>
+<li>TypeScript 設定嚴格，能提早抓出許多錯誤。</li>
+<li>Spectra 規格完整，能追溯需求理由。</li>
+</ul>
+<h3 id="主要風險">主要風險</h3>
+<table>
+<tr><th>風險</th><th>位置</th><th>說明</th></tr>
+<tr><td>Template string XSS</td><td><code>src/main.ts</code>、<code>settings/index.ts</code></td><td>已有 <code>escHtml()</code>，但未來新增 user input 欄位時要記得套用</td></tr>
+<tr><td>無自動測試</td><td>repo 目前未看到 test runner</td><td>清空、sequence、settings validation 建議補 Playwright 或 unit tests</td></tr>
+<tr><td>IndexedDB API callback 較分散</td><td><code>src/db/db.ts</code></td><td>若資料操作變多，可考慮抽 Promise helper</td></tr>
+<tr><td>CSS 全域集中</td><td><code>src/styles/base.css</code></td><td>小專案可接受，功能變多後需要分段管理</td></tr>
+<tr><td>Graphify no-LLM 圖譜語意有限</td><td><code>graphify-out/graph.json</code></td><td>自然語言 query 無語意索引，需搭配 <code>explain</code> 與原始碼閱讀</td></tr>
+<h3 id="建議下一步">建議下一步</h3>
+</table>
+<ol>
+<li>補最小測試：</li>
+</ol>
+<ul>
+<li>新增第一筆 courseNumber 為 1。</li>
+<li>清空後 sequence 不重設。</li>
+<li>settings 儲存後首頁重新讀取。</li>
+<li>清空片語不完全相符時按鈕不可用。</li>
+</ul>
+<ol>
+<li>將 <code>escHtml()</code> 集中成 shared utility，避免 <code>main.ts</code> 與 <code>settings/index.ts</code> 各自維護。</li>
+<li>若新增更多資料操作，為 IndexedDB 包一層小型 request/transaction Promise helper。</li>
+<li>若要使用 graphify semantic extraction，需要使用者明確同意外部 LLM/API 可接收 repo 內容，否則維持本機 no-LLM AST 圖譜。</li>
+</ol>
+<h2 id="附錄-常用指令">附錄：常用指令</h2>
+<pre><code class="language-bash">
+npm run dev
+npm run typecheck
+npm run build
+</code></pre>
+<pre><code class="language-bash">
+/Users/user/.local/bin/graphify update . --no-cluster
+/Users/user/.local/bin/graphify explain navigate --graph graphify-out/graph.json
+/Users/user/.local/bin/graphify explain getDB --graph graphify-out/graph.json
+/Users/user/.local/bin/graphify tree --graph graphify-out/graph.json --output graphify-out/GRAPH_TREE.html --root /Users/user/Downloads/course-quota-web --label course-quota-web
+</code></pre>
+</div>
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+window.addEventListener('scroll',()=>{
+  document.getElementById('back-top').style.display=window.scrollY>400?'block':'none';
+});
+const tocLinks=document.querySelectorAll('#toc-sidebar a');
+const headings=[];
+tocLinks.forEach(a=>{
+  const id=decodeURIComponent(a.getAttribute('href').slice(1));
+  const el=document.getElementById(id);
+  if(el)headings.push({el,a});
+});
+let ticking=false;
+window.addEventListener('scroll',()=>{
+  if(!ticking){requestAnimationFrame(()=>{
+    let cur=headings[0];
+    for(const h of headings){if(h.el.getBoundingClientRect().top<=100)cur=h;}
+    tocLinks.forEach(a=>a.classList.remove('active'));
+    if(cur)cur.a.classList.add('active');
+    ticking=false;
+  });ticking=true;}
+});
+</script>
+</body>
+</html>
